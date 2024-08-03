@@ -2,6 +2,10 @@ import numpy as np
 import nnfs
 from nnfs.datasets import spiral_data
 
+from activation_relu import ActivationReLU
+from activation_softmax import ActivationSoftmax
+from loss_categorical_cross_entropy import LossCategoricalCrossEntropy
+
 nnfs.init()
 
 
@@ -32,5 +36,13 @@ class LayerDense:
 if __name__ == "__main__":
     X, y = spiral_data(samples=100, classes=3)
     dense1 = LayerDense(2, 3)
+    activation1 = ActivationReLU()
+    dense2 = LayerDense(3, 3)
+    activation2 = ActivationSoftmax()
+    loss_function = LossCategoricalCrossEntropy()
     dense1.forward(X)
-    print(dense1.output)
+    activation1.forward(dense1.output)
+    dense2.forward(activation1.output)
+    activation2.forward(dense2.output)
+    loss = loss_function.calculate(activation2.output, y)
+    print("Loss:" + str(loss))
