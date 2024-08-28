@@ -18,6 +18,10 @@ class LayerDense:
         n_inputs (int): Number of inputs to the layer.
         n_neurons (int): Number of neurons in the layer.
         """
+        self.inputs = None
+        self.dinputs = None
+        self.dbiases = None
+        self.dweights = None
         self.output = None
         self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
         self.biases = np.zeros((1, n_neurons))
@@ -29,7 +33,13 @@ class LayerDense:
         Parameters:
         inputs (np.ndarray): Input data to the layer.
         """
+        self.inputs = inputs
         self.output = np.dot(inputs, self.weights) + self.biases
+
+    def backward(self, dvalues):
+        self.dweights = np.dot(self.inputs.T, dvalues)
+        self.dbiases = np.sum(dvalues, axis=0, keepdims=True)
+        self.dinputs = np.dot(dvalues, self.weights.T)
 
 
 # Example usage:
