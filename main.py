@@ -20,9 +20,9 @@ def main():
     # Create Softmax classifier’s combined loss and activation
     loss_activation = ActivationSoftmaxLossCategoricalcrossentropy()
     # Create optimizer
-    optimizer = OptimizerSGD()
+    optimizer = OptimizerSGD(decay=1e-3)
 
-    for epoch in range(10001):
+    for epoch in range(28001):
         # Perform a forward pass of our training data through this layer
         dense1.forward(X)
         # Perform a forward pass through activation function
@@ -48,8 +48,10 @@ def main():
         activation1.backward(dense2.dinputs)
         dense1.backward(activation1.dinputs)
 
+        optimizer.pre_update_params()
         optimizer.update_params(dense1)
         optimizer.update_params(dense2)
+        optimizer.post_update_params()
 
 
 if __name__ == "__main__":
