@@ -3,6 +3,7 @@ import numpy as np
 
 class LossCategoricalCrossEntropy:
     def __init__(self):
+        self.dinputs = None
         self.correct_confidences = None
 
     def forward(self, y_pred, y_true):
@@ -18,3 +19,11 @@ class LossCategoricalCrossEntropy:
     def calculate(self, output, y):
         sample_losses = self.forward(output, y)
         return np.mean(sample_losses)
+    
+    def backward(self, dvalues, y_true):
+        samples = len(dvalues)
+        labels = len(dvalues[0])
+        if len(y_true.shape) == 1:
+            y_true = np.eye(labels)[y_true]
+        self.dinputs = -y_true/dvalues
+        self.dinputs = self.dinputs/samples
