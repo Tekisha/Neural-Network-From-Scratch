@@ -5,6 +5,7 @@ from activation_relu import ActivationReLU
 from activation_softmax_loss_categorical_cross_entropy import ActivationSoftmaxLossCategoricalcrossentropy
 from layer_dense import LayerDense
 from optimizer_adagrad import OptimizerAdagrad
+from optimizer_adam import OptimizerAdam
 from optimizer_rmsprop import OptimizerRMSprop
 from optimizer_sgd import OptimizerSGD
 
@@ -31,7 +32,8 @@ def main():
 
     # Create optimizer
     #optimizer = OptimizerAdagrad(decay=1e-4)
-    optimizer = OptimizerRMSprop(learning_rate=0.02, decay=1e-5, rho=0.999)
+    #optimizer = OptimizerRMSprop(learning_rate=0.02, decay=1e-5, rho=0.999)
+    optimizer = OptimizerAdam(learning_rate=0.02, decay=1e-5)
 
     # Train in loop
     for epoch in range(10001):
