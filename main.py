@@ -31,7 +31,9 @@ def main():
     loss_activation = ActivationSoftmaxLossCategoricalcrossentropy()
 
     # Create optimizer
+    #optimizer = OptimizerSGD(decay=8e-8, momentum=0.9)
     #optimizer = OptimizerAdagrad(decay=1e-4)
+    #optimizer = OptimizerRMSprop(decay=1e-4)
     #optimizer = OptimizerRMSprop(learning_rate=0.02, decay=1e-5, rho=0.999)
     optimizer = OptimizerAdam(learning_rate=0.02, decay=1e-5)
 
