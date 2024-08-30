@@ -18,7 +18,7 @@ def main():
     X, y = spiral_data(samples=100, classes=3)
 
     # Create Dense layer with 2 input features and 64 output values
-    dense1 = LayerDense(2, 64)
+    dense1 = LayerDense(2, 64, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
 
     # Create ReLU activation (to be used with Dense layer)
     activation1 = ActivationReLU()
@@ -52,7 +52,9 @@ def main():
 
         # Perform a forward pass through the activation/loss function
         # takes the output of second dense layer here and returns loss
-        loss = loss_activation.forward(dense2.output, y)
+        data_loss = loss_activation.forward(dense2.output, y)
+        regularization_loss = loss_activation.regularization_loss(dense1) + loss_activation.regularization_loss(dense2)
+        loss = data_loss + regularization_loss
 
         # Calculate accuracy from output of activation2 and targets
         # calculate values along first axis
@@ -84,7 +86,10 @@ def main():
     dense1.forward(X_test)
     activation1.forward(dense1.output)
     dense2.forward(activation1.output)
-    loss = loss_activation.forward(dense2.output, y_test)
+    #loss = loss_activation.forward(dense2.output, y_test)
+    data_loss = loss_activation.forward(dense2.output, y_test)
+    regularization_loss = loss_activation.regularization_loss(dense1) + loss_activation.regularization_loss(dense2)
+    loss = data_loss + regularization_loss
     predictions = np.argmax(loss_activation.output, axis=1)
     if len(y_test.shape) == 2:
         y_test = np.argmax(y_test, axis=1)
