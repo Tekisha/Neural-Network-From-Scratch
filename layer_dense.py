@@ -17,6 +17,10 @@ class LayerDense:
         Parameters:
         n_inputs (int): Number of inputs to the layer.
         n_neurons (int): Number of neurons in the layer.
+        weight_regularizer_l1 (float): L1 regularization factor for weights.
+        weight_regularizer_l2 (float): L2 regularization factor for weights.
+        bias_regularizer_l1 (float): L1 regularization factor for biases.
+        bias_regularizer_l2 (float): L2 regularization factor for biases.
         """
         self.inputs = None
         self.dinputs = None
@@ -44,6 +48,12 @@ class LayerDense:
         self.output = np.dot(inputs, self.weights) + self.biases
 
     def backward(self, dvalues):
+        """
+        Perform the backward pass, calculating the gradients of weights, biases, and inputs.
+
+        Parameters:
+        dvalues (np.ndarray): Gradients of the loss with respect to the layer's outputs.
+        """
         self.dweights = np.dot(self.inputs.T, dvalues)
         self.dbiases = np.sum(dvalues, axis=0, keepdims=True)
 
@@ -64,26 +74,3 @@ class LayerDense:
             self.dbiases += 2*self.bias_regularizer_l2 * self.biases
 
         self.dinputs = np.dot(dvalues, self.weights.T)
-
-
-
-# Example usage:
-if __name__ == "__main__":
-    X, y = spiral_data(samples=100, classes=3)
-    dense1 = LayerDense(2, 3)
-    activation1 = ActivationReLU()
-    dense2 = LayerDense(3, 3)
-    activation2 = ActivationSoftmax()
-    loss_function = LossCategoricalCrossEntropy()
-    dense1.forward(X)
-    activation1.forward(dense1.output)
-    dense2.forward(activation1.output)
-    activation2.forward(dense2.output)
-    loss = loss_function.calculate(activation2.output, y)
-    print("Loss:" + str(loss))
-
-    predictions = np.argmax(activation2.output, axis=1)
-    if len(y.shape) == 2:
-        y = np.argmax(y, axis=1)
-    accuracy = np.mean(predictions == y)
-    print("Accuracy:" + str(accuracy))

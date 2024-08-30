@@ -3,6 +3,14 @@ import numpy as np
 
 class OptimizerSGD:
     def __init__(self, learning_rate=1., decay=0., momentum=0.):
+        """
+        Initialize the SGD (Stochastic Gradient Descent) optimizer with the specified parameters.
+
+        Parameters:
+        learning_rate (float): Initial learning rate for the optimizer.
+        decay (float): Learning rate decay factor.
+        momentum (float): Momentum factor for accelerating updates in the relevant direction.
+        """
         self.learning_rate = learning_rate
         self.current_learning_rate = learning_rate
         self.decay = decay
@@ -10,10 +18,19 @@ class OptimizerSGD:
         self.momentum = momentum
 
     def pre_update_params(self):
+        """
+        Adjust the current learning rate based on the decay factor before updating parameters.
+        """
         if self.decay:
             self.current_learning_rate = self.learning_rate * (1. / (1. + self.decay * self.iterations))
 
     def update_params(self, layer):
+        """
+        Update the parameters of the layer using SGD optimization.
+
+        Parameters:
+        layer (object): The layer whose parameters will be updated.
+        """
         if self.momentum:
             if not hasattr(self, 'weight_momentums'):
                 layer.weight_momentums = np.zeros_like(layer.weights)
@@ -31,4 +48,7 @@ class OptimizerSGD:
         layer.biases += bias_updates
 
     def post_update_params(self):
+        """
+        Increment the iteration count after parameter updates.
+        """
         self.iterations += 1

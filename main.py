@@ -12,22 +12,12 @@ from optimizer_sgd import OptimizerSGD
 
 
 def main():
-    # Assuming the necessary classes (Layer_Dense, Activation_ReLU,
-    # Activation_Softmax_Loss_CategoricalCrossentropy, Optimizer_SGD, and spiral_data) are defined elsewhere
-
     # Create dataset
     X, y = spiral_data(samples=1000, classes=3)
 
-    # Create Dense layer with 2 input features and 64 output values
     dense1 = LayerDense(2, 64, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
-
-    # Create ReLU activation (to be used with Dense layer)
     activation1 = ActivationReLU()
-
     dropout1 = LayerDropout(0.1)
-
-    # Create second Dense layer with 64 input features (as we take output
-    # of previous layer here) and 3 output values (output values)
     dense2 = LayerDense(64, 3)
 
     # Create Softmax classifier's combined loss and activation
@@ -40,19 +30,10 @@ def main():
     #optimizer = OptimizerRMSprop(learning_rate=0.02, decay=1e-5, rho=0.999)
     optimizer = OptimizerAdam(learning_rate=0.02, decay=1e-5)
 
-    # Train in loop
     for epoch in range(10001):
-        # Perform a forward pass of our training data through this layer
         dense1.forward(X)
-
-        # Perform a forward pass through activation function
-        # takes the output of first dense layer here
         activation1.forward(dense1.output)
-
         dropout1.forward(activation1.output)
-
-        # Perform a forward pass through second Dense layer
-        # takes outputs of activation function of first layer as inputs
         dense2.forward(dropout1.output)
 
         # Perform a forward pass through the activation/loss function
